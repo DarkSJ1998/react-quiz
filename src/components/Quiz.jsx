@@ -7,6 +7,9 @@ export default function Quiz() {
 
 	const activeQuestionIndex = userAnswers.length;
 
+	const shuffledAnswers = [...QUESTIONS[activeQuestionIndex].answers];
+	shuffledAnswers.sort(() => Math.random() - 0.5);
+
 	function handleSelectAnswer(selectedOption) {
 		console.debug(`userAnswers:`, userAnswers);
 		setUserAnswers((prev) => [...prev, selectedOption]);
@@ -18,17 +21,13 @@ export default function Quiz() {
 				<h2>{QUESTIONS[activeQuestionIndex].text}</h2>
 
 				<ul id='answers'>
-					{QUESTIONS[activeQuestionIndex].answers.map(
-						(option, index) => (
-							<li key={`option_${index + 1}`} className='answer'>
-								<button
-									onClick={() => handleSelectAnswer(option)}
-								>
-									{option}
-								</button>
-							</li>
-						)
-					)}
+					{shuffledAnswers.map((option, index) => (
+						<li key={`option_${index + 1}`} className='answer'>
+							<button onClick={() => handleSelectAnswer(option)}>
+								{option}
+							</button>
+						</li>
+					))}
 				</ul>
 			</div>
 		</div>
