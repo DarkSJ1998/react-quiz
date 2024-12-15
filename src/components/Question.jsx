@@ -39,8 +39,10 @@ export default function Question({ index, onSelect, onSkip }) {
 	 * correct or wrong.
 	 */
 	let answerState = '';
-	if (answer.selectedAnswer) {
+	if (answer.selectedAnswer && answer.isCorrect !== null) {
 		answerState = answer.isCorrect ? 'correct' : 'wrong';
+	} else if (answer.selectedAnswer) {
+		answerState = 'answered';
 	}
 
 	return (
