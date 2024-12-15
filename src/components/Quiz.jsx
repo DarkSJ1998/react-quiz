@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 
 import quizCompletePng from '../assets/quiz-complete.png';
 import QUESTIONS from '../questions';
@@ -23,17 +23,23 @@ export default function Quiz() {
 	const shuffledAnswers = [...QUESTIONS[activeQuestionIndex].answers];
 	shuffledAnswers.sort(() => Math.random() - 0.5);
 
-	function handleSelectAnswer(selectedOption) {
+	const handleSelectAnswer = useCallback((selectedOption) => {
 		console.debug(`userAnswers:`, userAnswers);
 		setUserAnswers((prev) => [...prev, selectedOption]);
-	}
+	}, []);
+
+	const handleSkipAnswer = useCallback(
+		() => handleSelectAnswer(null),
+		[handleSelectAnswer]
+	);
 
 	return (
 		<div id='quiz'>
 			<div id='question'>
 				<QuestionTimer
+					key={QUESTIONS[activeQuestionIndex].id}
 					timeout={10000}
-					onTimeout={() => handleSelectAnswer(null)}
+					onTimeout={handleSkipAnswer}
 				/>
 
 				<h2>{QUESTIONS[activeQuestionIndex].text}</h2>
