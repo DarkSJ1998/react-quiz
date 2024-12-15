@@ -21,8 +21,6 @@ export default function Quiz() {
 		answerState === '' ? userAnswers.length : userAnswers.length - 1;
 
 	const handleSelectAnswer = useCallback((selectedOption) => {
-		console.debug(`userAnswers:`, userAnswers);
-
 		// Setting the option into the selected phase
 		setAnswerState('answered');
 
@@ -73,7 +71,7 @@ export default function Quiz() {
 		<div id='quiz'>
 			<div id='question'>
 				<QuestionTimer
-					key={QUESTIONS[activeQuestionIndex].id}
+					key={activeQuestionIndex}
 					timeout={10000}
 					onTimeout={handleSkipAnswer}
 				/>
