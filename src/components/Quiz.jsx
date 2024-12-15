@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 
 import quizCompletePng from '../assets/quiz-complete.png';
 import QUESTIONS from '../questions';
@@ -7,6 +7,9 @@ import QuestionTimer from './QuestionTimer';
 export default function Quiz() {
 	const [answerState, setAnswerState] = useState('');
 	const [userAnswers, setUserAnswers] = useState([]);
+
+	// A Ref so that we can persist the value across renders
+	const shuffledAnswers = useRef();
 
 	/**
 	 * If the current question is unanswered, we will show that,
@@ -60,8 +63,11 @@ export default function Quiz() {
 		);
 	}
 
-	const shuffledAnswers = [...QUESTIONS[activeQuestionIndex].answers];
-	shuffledAnswers.sort(() => Math.random() - 0.5);
+	// Setting it on the first render cycle and not again
+	if (!shuffledAnswers.current) {
+		shuffledAnswers.current = [...QUESTIONS[activeQuestionIndex].answers];
+		shuffledAnswers.current.sort(() => Math.random() - 0.5);
+	}
 
 	return (
 		<div id='quiz'>
@@ -75,7 +81,7 @@ export default function Quiz() {
 				<h2>{QUESTIONS[activeQuestionIndex].text}</h2>
 
 				<ul id='answers'>
-					{shuffledAnswers.map((option, index) => {
+					{shuffledAnswers.current.map((option, index) => {
 						// The dynamic CSS class that would be applied
 						let cssClass = '';
 
