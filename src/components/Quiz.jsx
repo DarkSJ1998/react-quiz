@@ -5,41 +5,13 @@ import QUESTIONS from '../questions';
 import Question from './Question';
 
 export default function Quiz() {
-	const [answerState, setAnswerState] = useState('');
 	const [userAnswers, setUserAnswers] = useState([]);
 
-	/**
-	 * If the current question is unanswered, we will show that,
-	 * if the current question is answered, we will continue to
-	 * show that for a while (userAnswers.length would point to
-	 * the next question in this case).
-	 */
-	const activeQuestionIndex =
-		answerState === '' ? userAnswers.length : userAnswers.length - 1;
+	const activeQuestionIndex = userAnswers.length;
 
 	const handleSelectAnswer = useCallback((selectedOption) => {
-		// Setting the option into the selected phase
-		setAnswerState('answered');
-
 		// Updating the state for the answers
 		setUserAnswers((prev) => [...prev, selectedOption]);
-
-		setTimeout(() => {
-			/**
-			 * Updating the answerState to indicate if the answer is
-			 * correct or wrong.
-			 */
-			if (selectedOption === QUESTIONS[activeQuestionIndex].answers[0]) {
-				setAnswerState('correct');
-			} else {
-				setAnswerState('wrong');
-			}
-
-			// After a while, we will move to the next question
-			setTimeout(() => {
-				setAnswerState('');
-			}, 2000);
-		}, [1000]);
 	}, []);
 
 	const handleSkipAnswer = useCallback(
@@ -62,10 +34,7 @@ export default function Quiz() {
 		<div id='quiz'>
 			<Question
 				key={activeQuestionIndex}
-				questionText={QUESTIONS[activeQuestionIndex].text}
-				answers={QUESTIONS[activeQuestionIndex].answers}
-				selectedAnswer={userAnswers[userAnswers.length - 1]}
-				answerState={answerState}
+				index={activeQuestionIndex}
 				onSelect={handleSelectAnswer}
 				onSkip={handleSkipAnswer}
 			/>

@@ -1,15 +1,10 @@
 import { useEffect, useState } from 'react';
+
+import QUESTIONS from '../questions';
 import Answers from './Answers';
 import QuestionTimer from './QuestionTimer';
 
-export default function Question({
-	questionText,
-	answers,
-	selectedAnswer,
-	// answerState,
-	onSelect,
-	onSkip,
-}) {
+export default function Question({ index, onSelect, onSkip }) {
 	const [answer, setAnswer] = useState({
 		selectedAnswer: '',
 		isCorrect: null,
@@ -22,11 +17,13 @@ export default function Question({
 		});
 
 		setTimeout(() => {
+			// Setting the option into the selected phase
 			setAnswer({
 				selectedAnswer: answer,
-				isCorrect: answer === answers[0],
+				isCorrect: answer === QUESTIONS[index].answers[0],
 			});
 
+			// After a while, we will move to the next question
 			setTimeout(() => {
 				onSelect(answer);
 			}, 2000);
@@ -37,6 +34,10 @@ export default function Question({
 		console.debug(`answer:`, answer);
 	}, [answer]);
 
+	/**
+	 * Updating the answerState to indicate if the answer is
+	 * correct or wrong.
+	 */
 	let answerState = '';
 	if (answer.selectedAnswer) {
 		answerState = answer.isCorrect ? 'correct' : 'wrong';
@@ -46,11 +47,11 @@ export default function Question({
 		<div id='question'>
 			<QuestionTimer timeout={10000} onTimeout={onSkip} />
 
-			<h2>{questionText}</h2>
+			<h2>{QUESTIONS[index].text}</h2>
 
 			<Answers
-				answers={answers}
-				selectedAnswer={selectedAnswer}
+				answers={QUESTIONS[index].answers}
+				selectedAnswer={answer.selectedAnswer}
 				answerState={answerState}
 				onSelect={handleSelectAnswer}
 			/>
