@@ -9,6 +9,16 @@ export default function Quiz() {
 
 	const activeQuestionIndex = userAnswers.length;
 
+	const handleSelectAnswer = useCallback((selectedOption) => {
+		console.debug(`userAnswers:`, userAnswers);
+		setUserAnswers((prev) => [...prev, selectedOption]);
+	}, []);
+
+	const handleSkipAnswer = useCallback(
+		() => handleSelectAnswer(null),
+		[handleSelectAnswer]
+	);
+
 	const isQuizCompleted = activeQuestionIndex === QUESTIONS.length;
 
 	if (isQuizCompleted) {
@@ -22,16 +32,6 @@ export default function Quiz() {
 
 	const shuffledAnswers = [...QUESTIONS[activeQuestionIndex].answers];
 	shuffledAnswers.sort(() => Math.random() - 0.5);
-
-	const handleSelectAnswer = useCallback((selectedOption) => {
-		console.debug(`userAnswers:`, userAnswers);
-		setUserAnswers((prev) => [...prev, selectedOption]);
-	}, []);
-
-	const handleSkipAnswer = useCallback(
-		() => handleSelectAnswer(null),
-		[handleSelectAnswer]
-	);
 
 	return (
 		<div id='quiz'>
